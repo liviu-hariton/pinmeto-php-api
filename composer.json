@@ -1,0 +1,23 @@
+{
+  "name": "liviu-hariton/pinmeto-php-api",
+  "description": "A PHP library for interacting with the PinMeTo API",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Liviu Hariton",
+      "email": "liviu.hariton@gmail.com",
+      "homepage": "https://eu.liviuhariton.com"
+    }
+  ],
+  "keywords": ["pinmeto", "rest", "pinmeto-php", "pinmeto-rest", "pinmeto-api"],
+  "require": {
+    "php": "^8.0",
+    "ext-curl": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "LHDev\\PinMeToAPI\\": "src/"
+    }
+  }
+}
