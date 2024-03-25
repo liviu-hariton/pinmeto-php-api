@@ -39,7 +39,24 @@ You can install the PinMeToAPI PHP library via Composer. Run the following comma
 composer require liviu-hariton/pinmeto-php-api
 ```
 
+or add the following to your composer.json file
+
+```json
+{
+  "require": {
+    "liviu-hariton/pinmeto-php-api": "^0.1.0"
+  }
+}
+```
+and run Composer's install or update commands to complete installation
+
+```bash
+composer install
+```
+
 ## Usage
+
+Make sure to include the autoloader:
 
 ```php
 require_once 'vendor/autoload.php';
@@ -48,7 +65,7 @@ require_once 'vendor/autoload.php';
 Initialize the PinMeToAPI object with your PinMeTo `Account ID`, `App ID`, and `App Secret` values. You can obtain these credentials from your PinMeTo Account Settings [here](https://places.pinmeto.com/account-settings/).
 
 ```php
-$pinmeto = new PinMeToAPI([
+$pinmeto = new LHDev\PinMeToAPI\PinMeToAPI([
     'app_id' => 'PINMETO_APP_ID',
     'app_secret' => 'PINMETO_APP_SECRET',
     'account_id' => 'PINMETO_ACCOUNT_ID',

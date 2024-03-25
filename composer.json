@@ -7,12 +7,17 @@
     {
       "name": "Liviu Hariton",
       "email": "liviu.hariton@gmail.com",
-      "homepage": "https://eu.liviuhariton.com"
+      "homepage": "https://eu.liviuhariton.com",
+      "role": "Developer"
     }
   ],
+  "support": {
+    "source": "https://github.com/liviu-hariton/pinmeto-php-api",
+    "issues": "https://github.com/liviu-hariton/pinmeto-php-api/issues"
+  },
   "keywords": ["pinmeto", "rest", "pinmeto-php", "pinmeto-rest", "pinmeto-api"],
   "require": {
-    "php": "^8.0",
+    "php": "8.*",
     "ext-curl": "*"
   },
   "autoload": {
