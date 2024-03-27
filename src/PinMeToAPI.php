@@ -72,7 +72,7 @@ class PinMeToAPI {
         // Check if the required credentials are provided
         foreach($required_credentials as $credential) {
             if(empty($config_data[$credential])) {
-                throw new Exception("You need to provide the PinMeTo API credentials [`".implode('`, `', $required_credentials) . "`]");
+                throw new Exception("You need to provide the PinMeTo API credentials [`".implode('`, `', $required_credentials)."`]");
             }
         }
 
@@ -115,7 +115,9 @@ class PinMeToAPI {
      */
     private function authenticate(): string|null
     {
-        session_start();
+        if(session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
 
         // Check if the token is set or it's not expired
         if(!isset($_SESSION['_pinmeto_token']) || $_SESSION['_pinmeto_token_expire'] < time()) {
@@ -155,26 +157,21 @@ class PinMeToAPI {
                 'Content-Type: application/x-www-form-urlencoded',
                 'Authorization: Basic '.base64_encode($this->app_id.':'.$this->app_secret)
             );
+        } else {
+            $headers = array(
+                'Content-Type: application/json',
+                'Authorization: Bearer '.$this->token
+            );
         }
 
         // In case of locations V2 API
         if(!str_contains($call, "token") && !str_contains($call, "google") && !str_contains($call, "facebook")) {
             $url = $this->endpoint.'/v'.self::_API_VERSION_LOCATIONS.'/'.$this->account_id.'/'.$call;
-
-            $headers = array(
-                'Content-Type: application/json',
-                'Authorization: Bearer '.$this->token
-            );
         }
 
         // In case of metrics V3 API
         if(str_contains($call, "google") || str_contains($call, "facebook")) {
             $url = $this->endpoint.'/listings/v'.self::_API_VERSION_METRICS.'/'.$this->account_id.'/'.$call;
-
-            $headers = array(
-                'Content-Type: application/json',
-                'Authorization: Bearer '.$this->token
-            );
         }
 
         if($method === 'GET') {
@@ -203,6 +200,20 @@ class PinMeToAPI {
         curl_setopt($ch, CURLOPT_TIMEOUT, 20);
 
         $result = curl_exec($ch);
+
+        if($result === false) {
+            $curl_errno = curl_errno($ch);
+            $curl_error = curl_error($ch);
+
+            throw match($curl_errno) {
+                CURLE_COULDNT_CONNECT => new Exception('Could not connect to API (error '.$curl_errno.': '.$curl_error.')'),
+                CURLE_OPERATION_TIMEOUTED => new Exception('Operation timed out (error '.$curl_errno.': '.$curl_error.')'),
+                CURLE_SSL_CACERT => new Exception('Peer certificate cannot be authenticated (error '.$curl_errno.': '.$curl_error.')'),
+                CURLE_TOO_MANY_REDIRECTS => new Exception('The amount of redirections (error '.$curl_errno.': '.$curl_error.')'),
+                default => new Exception('cURL Error (error '.$curl_errno.': '.$curl_error.')'),
+            };
+        }
+
         curl_close($ch);
 
         return $result;
