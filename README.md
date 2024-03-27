@@ -23,6 +23,7 @@ Integration with PinMeTo offers the ability to fetch information and send update
   * [Get locations ratings](#ratings)
 * [License](#license)
 * [PinMeTo official API documentation](#pinmeto-official-api-documentation)
+* [Laravel package](#laravel-package)
 
 ## Requirements
 
@@ -224,3 +225,6 @@ This library is licensed under the MIT License. See the [LICENSE.md](LICENSE.md)
 ## PinMeTo official API documentation
 * The V2 documentation (locations data) is available on [PinMeTo GitHub](https://github.com/PinMeTo/documentation)
 * The V3 documentation (locations metrics) is available on [PinMeTo API - Documentation](https://api.pinmeto.com/documentation/v3/)
+
+## Laravel package
+A Laravel package is available also [here](https://github.com/liviu-hariton/pinmeto-laravel).
