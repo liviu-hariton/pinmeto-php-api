@@ -21,6 +21,7 @@ Integration with PinMeTo offers the ability to fetch information and send update
   * [Get locations metrics data](#metrics)
   * [Get locations Google keywords](#google-keywords)
   * [Get locations ratings](#ratings)
+  * [Get network categories](#network-categories)
 * [License](#license)
 * [PinMeTo official API documentation](#pinmeto-official-api-documentation)
 * [Disclaimer](#disclaimer)
@@ -216,6 +217,17 @@ $ratings = $pinmeto->getRatings(
     store_id: 8
 );
 ```
+
+### Network categories
+
+Get the list of categories per network. The available networks are `google` or `apple` or `facebook` or `bing`
+
+```php
+$category_networks = $pinmeto->getNetworkCategories(
+    network: 'apple'
+);
+```
+
 ## Response
 
 For every method described here, the response will be a JSON data format. Please find al the details in the [PinMeTo official API documentation](#pinmeto-official-api-documentation).

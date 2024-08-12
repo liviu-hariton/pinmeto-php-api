@@ -362,7 +362,7 @@ class PinMeToAPI {
      * @return bool|string|stdClass
      * @throws Exception
      */
-    public function getNetworkCategories($network): bool|string|stdClass
+    public function getNetworkCategories(string $network): bool|string|stdClass
     {
         if(!in_array($network, self::_NETWORKS)) {
             throw new Exception("The provided network name is not valid. Possible values: `".implode('`, `', self::_NETWORKS)."`");
