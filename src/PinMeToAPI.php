@@ -10,10 +10,12 @@ use stdClass;
 class PinMeToAPI {
     const _ENDPOINT_LIVE = 'https://api.pinmeto.com';
     const _ENDPOINT_TEST = 'https://api.test.pinmeto.com';
+    const _ENDPOINT_LOCATIONS = 'https://locations.api.pinmeto.com/';
+    const _ENDPOINT_LOCATIONS_TEST = 'https://locations.api.test.pinmeto.com/';
 
     private string $endpoint;
 
-    const _API_VERSION_LOCATIONS = '2';
+    const _API_VERSION_LOCATIONS = '4';
     const _API_VERSION_METRICS = '3';
 
     const _NETWORKS = [
@@ -112,6 +114,17 @@ class PinMeToAPI {
     }
 
     /**
+     * Get the locations API endpoint based on the library's working mode
+     *
+     * @var string $working_mode
+     * @return string
+     */
+    private function getLocationsEndpoint(string $working_mode): string
+    {
+        return $working_mode === 'live' ? self::_ENDPOINT_LOCATIONS : self::_ENDPOINT_LOCATIONS_TEST;
+    }
+
+    /**
      * Get the API Access Token and cache it in the current Session or regenerate it if it has expired
      *
      * @return string|null
@@ -152,6 +165,7 @@ class PinMeToAPI {
     private function connect(string $call, array $parameters = array(), string $method = 'GET'): bool|string|stdClass
     {
         $ch = curl_init();
+        $apiUrl = $this->endpoint;
 
         // In case of authorization
         if(str_contains($call, "token")) {
@@ -168,13 +182,22 @@ class PinMeToAPI {
             );
         }
 
-        // In case of locations V2 API
+        // Determine if this is a locations API call
+        $isLocationsCall = str_contains($call, "locations") && !str_contains($call, "token");
+
+        // Use locations endpoint for locations API calls
+        if($isLocationsCall) {
+            $working_mode = $this->endpoint === self::_ENDPOINT_LIVE ? 'live' : 'test';
+            $apiUrl = rtrim($this->getLocationsEndpoint($working_mode), '/');
+        }
+
+        // In case of locations V4 API
         if(!str_contains($call, "token") && !str_contains($call, "google") && !str_contains($call, "facebook")) {
-            $url = $this->endpoint.'/v'.self::_API_VERSION_LOCATIONS.'/'.$this->account_id.'/'.$call;
+            $url = $apiUrl.'/v'.self::_API_VERSION_LOCATIONS.'/'.$this->account_id.'/'.$call;
         }
 
         if(str_contains($call, "categories/")) {
-            $url = $this->endpoint.'/v'.self::_API_VERSION_LOCATIONS.'/'.$this->account_id.'/'.$call;
+            $url = $apiUrl.'/v'.self::_API_VERSION_LOCATIONS.'/'.$this->account_id.'/'.$call;
         }
 
         // In case of metrics V3 API
